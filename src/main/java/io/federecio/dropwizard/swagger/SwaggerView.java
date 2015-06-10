@@ -35,16 +35,17 @@ public class SwaggerView extends View {
         super("index.ftl", Charsets.UTF_8);
         this.config = config;
 
+        String assetPrefix = config.assetPrefix.equals("/") ? "" : config.assetPrefix;
         if (urlPattern.equals("/")) {
-            swaggerAssetsPath = Constants.SWAGGER_URI_PATH;
+            swaggerAssetsPath = assetPrefix + Constants.SWAGGER_URI_PATH;
         } else {
-            swaggerAssetsPath = urlPattern + Constants.SWAGGER_URI_PATH;
+            swaggerAssetsPath = urlPattern + assetPrefix + Constants.SWAGGER_URI_PATH;
         }
 
         if (urlPattern.equals("/")) {
-            contextPath = "";
+            contextPath = assetPrefix;
         } else {
-            contextPath = urlPattern;
+            contextPath = urlPattern + assetPrefix;
         }
     }
 

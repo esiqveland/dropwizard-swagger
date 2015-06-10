@@ -12,6 +12,9 @@ public class SwaggerUIConfiguration {
     @JsonProperty
     String authKeyLocation = "query";
 
+    @JsonProperty
+    String assetPrefix = "/";
+
     public String getAuthName() {
       return authName;
     }
@@ -34,5 +37,13 @@ public class SwaggerUIConfiguration {
 
     public void setAuthKeyLocation(String authKeyLocation) {
       this.authKeyLocation = authKeyLocation;
+    }
+
+    public String getAssetPrefix() {
+      return assetPrefix;
+    }
+
+    public void setAssetPrefix(String assetPrefix) {
+      this.assetPrefix = assetPrefix;
     }
 }
