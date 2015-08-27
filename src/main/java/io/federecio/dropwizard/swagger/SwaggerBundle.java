@@ -15,7 +15,6 @@
  */
 package io.federecio.dropwizard.swagger;
 
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableMap;
 import com.wordnik.swagger.jaxrs.config.BeanConfig;
@@ -41,7 +40,7 @@ public abstract class SwaggerBundle<T extends Configuration> implements Configur
     public void initialize(Bootstrap<?> bootstrap) {
         bootstrap.addBundle(new ViewBundle<Configuration>() {
             @Override
-            public Map<String, Map<String, String>> getViewConfiguration(final Configuration configuration) {
+            public ImmutableMap<String, ImmutableMap<String, String>> getViewConfiguration(final Configuration configuration) {
                 return ImmutableMap.of();
             }
         });
