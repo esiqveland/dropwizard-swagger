@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableMap;
 import com.wordnik.swagger.jaxrs.config.BeanConfig;
 import com.wordnik.swagger.jaxrs.listing.ApiListingResource;
+import com.wordnik.swagger.models.Swagger;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.assets.AssetsBundle;
@@ -56,17 +57,27 @@ public abstract class SwaggerBundle<T extends Configuration> implements Configur
         ConfigurationHelper configurationHelper = new ConfigurationHelper(configuration, swaggerBundleConfiguration);
         new AssetsBundle(Constants.SWAGGER_RESOURCES_PATH, configurationHelper.getSwaggerUriPath(), null, Constants.SWAGGER_ASSETS_NAME).run(environment);
 
-        environment.jersey().register(new SwaggerResource(configurationHelper.getUrlPattern()));
+        environment.jersey().register(
+            new SwaggerResource(
+                configurationHelper.getUrlPattern(),
+                swaggerBundleConfiguration.getUiConfiguration()));
         environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        setUpSwagger(swaggerBundleConfiguration, configurationHelper.getUrlPattern());
+        BeanConfig beanConfig = setUpSwagger(swaggerBundleConfiguration,
+                                             configurationHelper.getUrlPattern());
+
+        environment.getApplicationContext().setAttribute("swagger", beanConfig.getSwagger());
         environment.jersey().register(new ApiListingResource());
     }
 
     @SuppressWarnings("unused")
     protected abstract SwaggerBundleConfiguration getSwaggerBundleConfiguration(T configuration);
 
-    private void setUpSwagger(SwaggerBundleConfiguration swaggerBundleConfiguration, String urlPattern) {
+    @SuppressWarnings("unused")
+    protected void setUpSwagger(Swagger swagger) {}
+
+    private BeanConfig setUpSwagger(SwaggerBundleConfiguration swaggerBundleConfiguration,
+                                    String urlPattern) {
         BeanConfig config = new BeanConfig();
 
         if (swaggerBundleConfiguration.getTitle() != null) {
@@ -107,5 +118,8 @@ public abstract class SwaggerBundle<T extends Configuration> implements Configur
 
 
         config.setScan(true);
+        setUpSwagger(config.getSwagger());
+
+        return config;
     }
 }
